@@ -10,6 +10,7 @@ import fun.lewisdev.deluxehub.utility.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -87,7 +88,10 @@ public class PlayerListener extends Module {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (inDisabledWorld(player.getLocation())) return;
-
+		if(player.getGameMode() != GameMode.CREATIVE) {
+			player.setAllowFlight(false);
+			player.setFlying(false);
+		}
 		// Join message handling
 		if (joinQuitMessagesEnabled) {
 			if (joinMessage.equals("")) event.setJoinMessage(null);
@@ -139,9 +143,6 @@ public class PlayerListener extends Module {
 		}
 
 		FlyCommand.allowPlayerFly.remove(player.getUniqueId());
-		player.setAllowFlight(false);
-		player.setFlying(false);
-
 		player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 
 	}
