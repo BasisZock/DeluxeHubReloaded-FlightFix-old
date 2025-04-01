@@ -139,6 +139,8 @@ public class PlayerListener extends Module {
 		}
 
 		FlyCommand.allowPlayerFly.remove(player.getUniqueId());
+		player.setAllowFlight(false);
+		player.setFlying(false);
 
 		player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 
