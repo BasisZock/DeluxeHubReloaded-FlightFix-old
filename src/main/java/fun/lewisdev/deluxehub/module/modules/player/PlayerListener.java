@@ -16,6 +16,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -88,7 +89,7 @@ public class PlayerListener extends Module {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (inDisabledWorld(player.getLocation())) return;
-		if(player.getGameMode() != GameMode.CREATIVE) {
+		if(!player.getAllowFlight()) {
 			player.setAllowFlight(false);
 			player.setFlying(false);
 		}
@@ -127,8 +128,17 @@ public class PlayerListener extends Module {
 			}
 		}, 3L);
 	}
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onDeath(PlayerDeathEvent event) {
+		Player player = event.getEntity();
 
-	@EventHandler(priority = EventPriority.HIGH)
+		if (player.getAllowFlight()) {
+			player.setAllowFlight(false);
+			player.setFlying(false);
+		}
+	}
+
+    @EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 
 		Player player = event.getPlayer();

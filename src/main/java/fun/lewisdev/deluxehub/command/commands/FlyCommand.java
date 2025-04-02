@@ -31,7 +31,7 @@ public class FlyCommand {
 	public void flight(final CommandContext args, final CommandSender sender) throws CommandException {
 
 		if (args.argsLength() == 0) {
-			if (!(sender instanceof Player)) throw new CommandException("Console cannot clear inventory");
+			if (!(sender instanceof Player)) throw new CommandException("Console cannot toggle flight mode.");
 
 			if (!(sender.hasPermission(Permissions.COMMAND_FLIGHT.getPermission()))) {
 				Messages.NO_PERMISSION.send(sender);
@@ -39,7 +39,7 @@ public class FlyCommand {
 			}
 
 			Player player = (Player) sender;
-			if (allowPlayerFly.putIfAbsent(player.getUniqueId(), false) == null) ;
+			allowPlayerFly.putIfAbsent(player.getUniqueId(), false);
 			if (allowPlayerFly.get(player.getUniqueId())) {
 				Messages.FLIGHT_DISABLE.send(player);
 				toggleFlight(player, false);

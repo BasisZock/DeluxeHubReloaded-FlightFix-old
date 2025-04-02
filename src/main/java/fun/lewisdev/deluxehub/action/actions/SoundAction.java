@@ -17,7 +17,17 @@ public class SoundAction implements Action {
 	@Override
 	public void execute(DeluxeHubPlugin plugin, Player player, String data) {
 		try {
-			player.playSound(player.getLocation(), Registry.SOUNDS.getOrThrow(NamespacedKey.minecraft(data.toLowerCase().replaceFirst("^_", ".").replaceFirst("_$", ".").replaceAll("_(?=.*_)", "."))), 1L, 1L);
+			String soundName = data.toUpperCase().replace(".", "_");
+
+			// Try, to get the Sound
+			Object sound;
+			try {
+				sound = Enum.valueOf((Class<Enum>) Class.forName("org.bukkit.Sound"), soundName);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Bukkit Sound class not found!", e);
+			}
+
+			player.playSound(player.getLocation(), (org.bukkit.Sound) sound, 1.0F, 1.0F);
 		} catch (Exception ex) {
 			Bukkit.getLogger().warning("[DeluxeHub Action] Invalid sound name: " + data.toUpperCase());
 		}
